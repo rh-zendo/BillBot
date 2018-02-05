@@ -1,12 +1,19 @@
-﻿using System;
+﻿using Discord;
+using Discord.WebSocket;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
+
+// Bot Invite Link: https://discordapp.com/oauth2/authorize?client_id=410168907211603970&scope=bot
 namespace BillBot.Core
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Bot bot = new Bot();
+            bot.Initialize().GetAwaiter().GetResult();
         }
     }
 }
