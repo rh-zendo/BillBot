@@ -1,4 +1,5 @@
-﻿using Discord.WebSocket;
+﻿using Discord;
+using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,27 +10,37 @@ namespace BillBot.Core.Modules
     public abstract class BillBotModule
     {
         // Fields
-        private DiscordSocketClient client;
+        private readonly DiscordSocketClient socket;
 
-        public BillBotModule(DiscordSocketClient client)
+        public BillBotModule(DiscordSocketClient socket)
         {
-            this.client = client;
-
-            // Events
-            this.client.MessageReceived += Client_MessageReceived;
+            this.socket = socket;
+            
+            // Message Events
+            this.socket.MessageReceived += Socket_MessageReceived;
+            this.socket.MessageUpdated += Socket_MessageUpdated;
         }
-
-        #region Abstact Classes
-        protected abstract Task MessageReceived(SocketMessage message);
-        #endregion
         
-        #region Event Methods
-        private async Task Client_MessageReceived(SocketMessage message)
+        #region Message Events Methods
+        protected abstract Task MessageReceived(SocketMessage message);
+        protected abstract Task MessageUpdated(SocketMessage message);
+
+        private async Task Socket_MessageReceived(SocketMessage message)
         {
             // TODO: Remove Training room
-            if (message.Channel.Id != 410173873154162689) return;
+            if (message.Channel.Id != 410173873154162689)
+                return;
 
             await MessageReceived(message);
+        }
+
+        private async Task Socket_MessageUpdated(Cacheable<IMessage, ulong> arg1, SocketMessage message, ISocketMessageChannel arg3)
+        {
+            // TODO: Remove Training room
+            if (message.Channel.Id != 410173873154162689)
+                return;
+
+            await MessageUpdated(message);
         }
         #endregion
     }

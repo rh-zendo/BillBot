@@ -14,6 +14,11 @@ namespace BillBot.Core
         {
             Bot bot = new Bot();
             bot.Initialize().GetAwaiter().GetResult();
+
+            Console.WriteLine("Press any key to logout");
+            Console.ReadKey(true);
+
+            bot.LogoutAsync().GetAwaiter().GetResult();
         }
     }
 }

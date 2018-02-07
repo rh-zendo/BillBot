@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BillBot.Database.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Threading.Tasks;
 
 namespace BillBot.Database
 {
@@ -7,22 +9,36 @@ namespace BillBot.Database
     {
         // Fields
         private bool disposed = false;
-        private DatabaseContext databaseContext;
+        private DatabaseContext context;
+
+        // Repos
+        public BillBotSettingRepository BillBotSettingRepository;
+
+        public DiscordUserRepository DiscordUserRepository;
 
         public UnitOfWork()
         {
             var builder = new DbContextOptionsBuilder<DatabaseContext>();
-            builder.UseMySQL("server=localhost;database=mimmo;user=mimmo;password=mimmo");
+            builder.UseMySql("server=localhost;database=billbot;user=billbot;password=billbot");
+            this.context = new DatabaseContext(builder.Options);
 
-            this.databaseContext = new DatabaseContext(builder.Options);
+            this.BillBotSettingRepository = new BillBotSettingRepository(context);
+            this.DiscordUserRepository = new DiscordUserRepository(context);
         }
+
+        #region Complete Methods
+        public async Task CompleteAsync()
+        {
+            await this.context.SaveChangesAsync();
+        }
+        #endregion
 
         #region Dispose Methods
         protected virtual void Dispose(bool disposing)
         {
             if (!this.disposed)
                 if (disposing)
-                    databaseContext.Dispose();
+                    context.Dispose();
 
             this.disposed = true;
         }

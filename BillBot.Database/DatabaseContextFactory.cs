@@ -8,7 +8,7 @@ namespace BillBot.Database
         public DatabaseContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<DatabaseContext>();
-            builder.UseMySQL("server=localhost;database=mimmo;user=mimmo;password=mimmo");
+            builder.UseMySql("server=localhost;database=billbot;user=billbot;password=billbot");
             return new DatabaseContext(builder.Options);
         }
     }

@@ -21,21 +21,22 @@ namespace BillBot.Core.Modules
             this.badWords.Add("bs");
             this.badWords.Add("jävlar");
             
-
-
             Console.WriteLine("[BadLanguageModule] Loaded");
         }
 
         protected async override Task MessageReceived(SocketMessage message)
         { 
             var author = message.Author;
-
-            // TODO: Enable is jim miss behave
-            //if (!badWords.Any(s => message.Content.Contains(s)) && author.Username != "spicyjim")
+            
             if (!badWords.Any(s => message.Content.ToLower().Contains(s)))
                 return;
 
             await message.Channel.SendMessageAsync($"Hi {author.Username} could you please mind your language");
+        }
+
+        protected override Task MessageUpdated(SocketMessage message)
+        {
+            return null;
         }
     }
 }
